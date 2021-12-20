@@ -1,3 +1,8 @@
+## [5.0.10](https://github.com/realulim/extentreports-java/releases/tag/v5.0.10)
+
+#### Issues Resolved
+- [#333](https://github.com/extent-framework/extentreports-java/issues/333) JSON Archive breaks after first Test
+
 ## [5.0.9](https://github.com/extent-framework/extentreports-java/compare/v5.0.9...v5.0.9)
 
 #### Issues Resolved
