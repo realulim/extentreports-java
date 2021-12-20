@@ -1,13 +1,16 @@
 package com.aventstack.extentreports;
 
-import java.io.IOException;
-import java.util.List;
+import com.aventstack.extentreports.model.Log;
+import com.aventstack.extentreports.model.Media;
+import com.aventstack.extentreports.model.ScreenCapture;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import com.aventstack.extentreports.reporter.JsonFormatter;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.aventstack.extentreports.model.ScreenCapture;
-import com.aventstack.extentreports.reporter.JsonFormatter;
+import java.io.IOException;
+import java.util.List;
 
 public class AppenderTest {
     private static final String JSON_ARCHIVE = "target/json/jsonArchive.json";
@@ -163,4 +166,38 @@ public class AppenderTest {
         Assert.assertEquals(((ScreenCapture) list.get(0).getLogs().get(0).getMedia()).getBase64(),
                 ((ScreenCapture) test1.getModel().getLogs().get(0).getMedia()).getBase64());
     }
+
+    @Test
+    public void appendWithSparkReporter() throws IOException {
+        ExtentReports extent = new ExtentReports();
+        String testNamePrefix = "Append Test ";
+        String textWithoutScreenshotPrefix = "Just some random text ";
+        String textWithScreenshotPrefix = "Some text explaining the screenshot ";
+        for (int i = 1; i < 3; i++) {
+            String reportPath = "target/append/index.html";
+            String jsonPath = "target/append/index.json";
+            ExtentSparkReporter sparkReporter = new ExtentSparkReporter(reportPath);
+            JsonFormatter jsonReporter = new JsonFormatter(jsonPath);
+            extent.createDomainFromJsonArchive(jsonPath);
+            extent.attachReporter(jsonReporter, sparkReporter);
+            Media screenshot = MediaEntityBuilder.createScreenCaptureFromPath("img.png").build();
+            ExtentTest test = extent.createTest(testNamePrefix + i, "Test Description")
+                    .log(Status.INFO, textWithoutScreenshotPrefix + i, null, null)
+                    .log(Status.INFO, textWithScreenshotPrefix + i, null, screenshot);
+            extent.flush();
+        }
+        for (com.aventstack.extentreports.model.Test test : extent.getReport().getTestList()) {
+            if (test.getName().startsWith(testNamePrefix)) {
+                String runNumber = test.getName().substring(testNamePrefix.length());
+                for (Log logEntry : test.getLogs()) {
+                    Assert.assertEquals(Status.INFO, logEntry.getStatus());
+                    String details = logEntry.getDetails();
+                    if (logEntry.getMedia() != null) Assert.assertEquals(details, textWithScreenshotPrefix + runNumber);
+                    else Assert.assertEquals(details, textWithoutScreenshotPrefix + runNumber);
+                }
+            }
+        }
+        
+    }
+
 }
