@@ -1,9 +1,14 @@
-## [5.0.10](https://github.com/realulim/extentreports-java/releases/tag/v5.0.10)
+## [5.0.11](https://github.com/realulim/extentreports-java/releases/tag/v5.0.11)
+
+#### Issues Resolved
+- [#329](https://github.com/extent-framework/extentreports-java/issues/329) Test Results Summary on Dashboard
+
+## [5.0.10](https://github.com/extent-framework/extentreports-java/compare/v5.0.9...v5.0.10)
 
 #### Issues Resolved
 - [#333](https://github.com/extent-framework/extentreports-java/issues/333) JSON Archive breaks after first Test
 
-## [5.0.9](https://github.com/extent-framework/extentreports-java/compare/v5.0.9...v5.0.9)
+## [5.0.9](https://github.com/extent-framework/extentreports-java/compare/v5.0.8...v5.0.9)
 
 #### Issues Resolved
 - [#305](/issues/305) Fix HttpClient version-4.5.2 vulnerability

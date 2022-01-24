@@ -1,5 +1,16 @@
 <div class="test-wrapper row view test-view">
   <div class="test-list">
+    <div style="padding-left: 1.5rem; padding-top: 1rem; padding-bottom: 0.5rem;">
+      <div><small data-tooltip='${report.stats.parentPercentage?api.get(Status.PASS)}%'>
+        <b>${report.stats.parent?api.get(Status.PASS)}</b> ${parentHeading?lower_case} passed
+        </small>
+      </div>
+      <div>
+        <small data-tooltip='${report.stats.parentPercentage?api.get(Status.FAIL)}%'><b>${report.stats.parent?api.get(Status.FAIL)}</b> ${parentHeading?lower_case} failed, 
+        <b>${report.stats.parent?api.get(Status.SKIP)}</b> skipped, <b data-tooltip='${report.stats.parentPercentage?api.get(Status.WARNING)}%'>${report.stats.parent?api.get(Status.WARNING)}</b> others
+        </small>
+      </div>
+    </div>
     <#compress>
     <div class="test-list-tools">
       <ul class="tools pull-left">
