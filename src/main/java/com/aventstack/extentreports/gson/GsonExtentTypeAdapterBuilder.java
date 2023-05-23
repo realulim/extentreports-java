@@ -23,6 +23,11 @@ public class GsonExtentTypeAdapterBuilder {
             return this;
         }
 
+        public Builder registerTypeAdapter(java.lang.reflect.Type type, Object typeAdapter) {
+            builder.registerTypeAdapter(type, typeAdapter);
+            return this;
+        }
+
         public Gson build() {
             return builder.create();
         }
