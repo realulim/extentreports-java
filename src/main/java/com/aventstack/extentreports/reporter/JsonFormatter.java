@@ -26,11 +26,11 @@ public class JsonFormatter extends AbstractFileReporter implements ReporterConfi
 
     private final Set<Pair<Type, TypeAdapter<?>>> typeAdapterMappings = new HashSet<>();
 
-    public MyJsonFormatter(File file) {
+    public JsonFormatter(File file) {
         super(file);
     }
 
-    public MyJsonFormatter(String filePath) {
+    public JsonFormatter(String filePath) {
         super(new File(filePath));
     }
 
