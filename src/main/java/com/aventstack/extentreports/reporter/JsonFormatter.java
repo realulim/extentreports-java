@@ -10,21 +10,20 @@ import com.google.gson.TypeAdapter;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class JsonFormatter extends AbstractFileReporter implements ReporterConfigurable, ReportObserver<ReportEntity> {
 
     private static final String FILE_NAME = "extent.json";
 
-    private final Set<Pair<Type, TypeAdapter<?>>> typeAdapterMappings = new HashSet<>();
+    private final Set<Map<Type, TypeAdapter<?>>> typeAdapterMappings = new HashSet<>();
 
     public JsonFormatter(File file) {
         super(file);
@@ -34,7 +33,7 @@ public class JsonFormatter extends AbstractFileReporter implements ReporterConfi
         super(new File(filePath));
     }
 
-    public void addTypeAdapterMapping(Pair<Type, TypeAdapter<?>> typeAdapterMapping) {
+    public void addTypeAdapterMapping(Map<Type, TypeAdapter<?>> typeAdapterMapping) {
         this.typeAdapterMappings.add(typeAdapterMapping);
     }
 
@@ -63,8 +62,10 @@ public class JsonFormatter extends AbstractFileReporter implements ReporterConfi
     private void flush(ReportEntity value) {
         GsonExtentTypeAdapterBuilder.Builder builder = GsonExtentTypeAdapterBuilder.builder()
                 .withBddTypeAdapterFactory();
-        for (Pair<Type, TypeAdapter<?>> typeAdapterMapping : typeAdapterMappings) {
-            builder.registerTypeAdapter(typeAdapterMapping.getLeft(), typeAdapterMapping.getRight());
+        for (Map<Type, TypeAdapter<?>> typeAdapterMapping : typeAdapterMappings) {
+            for (Type type : typeAdapterMapping.keySet()) {
+                builder.registerTypeAdapter(type, typeAdapterMapping.get(type));
+            }
         }
         Gson gson = builder.build();
         final String filePath = getFileNameAsExt(FILE_NAME, new String[]{".json"});
