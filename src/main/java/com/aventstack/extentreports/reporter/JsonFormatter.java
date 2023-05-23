@@ -1,28 +1,41 @@
 package com.aventstack.extentreports.reporter;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.List;
-
 import com.aventstack.extentreports.gson.GsonExtentTypeAdapterBuilder;
 import com.aventstack.extentreports.model.Test;
 import com.aventstack.extentreports.observer.ReportObserver;
 import com.aventstack.extentreports.observer.entity.ReportEntity;
 import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
 
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class JsonFormatter extends AbstractFileReporter implements ReporterConfigurable, ReportObserver<ReportEntity> {
+
     private static final String FILE_NAME = "extent.json";
 
-    public JsonFormatter(File file) {
+    private final Set<Pair<Type, TypeAdapter<?>>> typeAdapterMappings = new HashSet<>();
+
+    public MyJsonFormatter(File file) {
         super(file);
     }
 
-    public JsonFormatter(String filePath) {
+    public MyJsonFormatter(String filePath) {
         super(new File(filePath));
+    }
+
+    public void addTypeAdapterMapping(Pair<Type, TypeAdapter<?>> typeAdapterMapping) {
+        this.typeAdapterMappings.add(typeAdapterMapping);
     }
 
     @Override
@@ -48,9 +61,12 @@ public class JsonFormatter extends AbstractFileReporter implements ReporterConfi
     }
 
     private void flush(ReportEntity value) {
-        Gson gson = GsonExtentTypeAdapterBuilder.builder()
-                .withBddTypeAdapterFactory()
-                .build();
+        GsonExtentTypeAdapterBuilder.Builder builder = GsonExtentTypeAdapterBuilder.builder()
+                .withBddTypeAdapterFactory();
+        for (Pair<Type, TypeAdapter<?>> typeAdapterMapping : typeAdapterMappings) {
+            builder.registerTypeAdapter(typeAdapterMapping.getLeft(), typeAdapterMapping.getRight());
+        }
+        Gson gson = builder.build();
         final String filePath = getFileNameAsExt(FILE_NAME, new String[]{".json"});
         try (FileWriter writer = new FileWriter(new File(filePath))) {
             List<Test> list = value.getReport().getTestList();
