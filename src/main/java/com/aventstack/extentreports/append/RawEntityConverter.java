@@ -50,11 +50,11 @@ public class RawEntityConverter {
             if (log.hasException() && log.hasMedia())
                 addMedia(log, extentTest, log.getException().getException());
             else if (log.hasException())
-                extentTest.log(log.getStatus(), log.getException().getException());
+                extentTest.log(log.getTimestamp(), log.getStatus(), log.getException().getException());
             else if (log.hasMedia())
                 addMedia(log, extentTest, null);
             else
-                extentTest.log(log.getStatus(), log.getDetails());
+                extentTest.log(log.getTimestamp(), log.getStatus(), log.getDetails());
         }
 
         // assign attributes
@@ -78,10 +78,10 @@ public class RawEntityConverter {
     private void addMedia(Log log, ExtentTest extentTest, Throwable ex) {
         Media m = log.getMedia();
         if (m.getPath() != null) {
-            extentTest.log(log.getStatus(), log.getDetails(), ex,
+            extentTest.log(log.getTimestamp(), log.getStatus(), log.getDetails(), ex,
                     MediaEntityBuilder.createScreenCaptureFromPath(m.getPath()).build());
         } else if (((ScreenCapture) m).getBase64() != null) {
-            extentTest.log(log.getStatus(), log.getDetails(), ex,
+            extentTest.log(log.getTimestamp(), log.getStatus(), log.getDetails(), ex,
                     MediaEntityBuilder.createScreenCaptureFromBase64String(((ScreenCapture) m).getBase64())
                             .build());
         }

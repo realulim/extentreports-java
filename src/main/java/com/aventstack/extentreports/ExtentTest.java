@@ -1,8 +1,5 @@
 package com.aventstack.extentreports;
 
-import java.io.Serializable;
-import java.util.Arrays;
-
 import com.aventstack.extentreports.gherkin.model.IGherkinFormatterModel;
 import com.aventstack.extentreports.markuputils.Markup;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
@@ -17,6 +14,11 @@ import com.aventstack.extentreports.model.ScreenCapture;
 import com.aventstack.extentreports.model.Test;
 import com.aventstack.extentreports.model.service.ExceptionInfoService;
 import com.aventstack.extentreports.util.Assert;
+
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 
 import lombok.Getter;
 
@@ -333,8 +335,12 @@ public class ExtentTest implements RunResult, Serializable {
         return generateLog(status, markup.getMarkup());
     }
 
+    public ExtentTest log(Status status, String details, Throwable t, Media media) {
+        return log(Calendar.getInstance().getTime(), status, details, t, media);
+    }
+    
     /**
-     * Logs an event with {@link Status}, details and a media object:
+     * Logs an event with a timestamp, a {@link Status}, details, and a media object:
      * {@link ScreenCapture}
      * 
      * <p>
@@ -345,6 +351,8 @@ public class ExtentTest implements RunResult, Serializable {
      * test.log(Status.FAIL, "details", MediaEntityBuilder.createScreenCaptureFromPath("screen.png").build());
      * </pre>
      * 
+     * @param timestamp
+     *            A {@link Date} when the log event took place
      * @param status
      *            {@link Status}
      * @param details
@@ -357,11 +365,12 @@ public class ExtentTest implements RunResult, Serializable {
      * 
      * @return An {@link ExtentTest} object
      */
-    public ExtentTest log(Status status, String details, Throwable t, Media media) {
+    public ExtentTest log(Date timestamp, Status status, String details, Throwable t, Media media) {
         Assert.notNull(status, "Status must not be null");
         Log log = Log.builder()
                 .status(status)
                 .details(details == null ? "" : details)
+                .timestamp(timestamp)
                 .build();
         ExceptionInfo exceptionInfo = ExceptionInfoService.createExceptionInfo(t);
         log.setException(exceptionInfo);
@@ -376,8 +385,12 @@ public class ExtentTest implements RunResult, Serializable {
         return this;
     }
 
+    public ExtentTest log(Status status, String details, Media media) {
+        return log(Calendar.getInstance().getTime(), status, details, null, media);
+    }
+
     /**
-     * Logs an event with {@link Status}, details and a media object:
+     * Logs an event with a timestamp, a {@link Status}, details and a media object:
      * {@link ScreenCapture}
      * 
      * <p>
@@ -388,6 +401,8 @@ public class ExtentTest implements RunResult, Serializable {
      * test.log(Status.FAIL, "details", MediaEntityBuilder.createScreenCaptureFromPath("screen.png").build());
      * </pre>
      * 
+     * @param timestamp
+     *            A {@link Date} when the log event took place
      * @param status
      *            {@link Status}
      * @param details
@@ -397,8 +412,8 @@ public class ExtentTest implements RunResult, Serializable {
      * 
      * @return An {@link ExtentTest} object
      */
-    public ExtentTest log(Status status, String details, Media media) {
-        return log(status, details, null, media);
+    public ExtentTest log(Date timestamp, Status status, String details, Media media) {
+        return log(timestamp, status, details, null, media);
     }
 
     /**
@@ -424,9 +439,15 @@ public class ExtentTest implements RunResult, Serializable {
         return log(status, null, null, media);
     }
 
+    public ExtentTest log(Status status, String details) {
+        return log(Calendar.getInstance().getTime(), status, details, null);
+    }
+
     /**
-     * Logs an event with {@link Status} and details
+     * Logs an event with a timestamp, a {@link Status} and details
      * 
+     * @param timestamp
+     *            A {@link Date} when the log event took place
      * @param status
      *            {@link Status}
      * @param details
@@ -434,8 +455,8 @@ public class ExtentTest implements RunResult, Serializable {
      * 
      * @return An {@link ExtentTest} object
      */
-    public ExtentTest log(Status status, String details) {
-        return log(status, details, null);
+    public ExtentTest log(Date timestamp, Status status, String details) {
+        return log(timestamp, status, details, null);
     }
 
     /**
@@ -459,8 +480,16 @@ public class ExtentTest implements RunResult, Serializable {
         return log(status, details);
     }
 
+    public ExtentTest log(Status status, Throwable t, Media media) {
+        return log(Calendar.getInstance().getTime(), status, t, media);
+    }
+
+    public ExtentTest log(Status status, Throwable t) {
+        return log(Calendar.getInstance().getTime(), status, t, null);
+    }
+
     /**
-     * Logs an event with {@link Status}, an exception and a media object:
+     * Logs an event with a timestamp, a {@link Status}, an exception abd a media object:
      * {@link ScreenCapture}
      * 
      * <p>
@@ -472,6 +501,8 @@ public class ExtentTest implements RunResult, Serializable {
      * test.log(Status.FAIL, exception, MediaEntityBuilder.createScreenCaptureFromPath("screen.png").build());
      * </pre>
      * 
+     * @param timestamp
+     *            A {@link Date} when the log event took place
      * @param status
      *            {@link Status}
      * @param t
@@ -481,13 +512,15 @@ public class ExtentTest implements RunResult, Serializable {
      * 
      * @return An {@link ExtentTest} object
      */
-    public ExtentTest log(Status status, Throwable t, Media media) {
-        return log(status, null, t, media);
+    public ExtentTest log(Date timestamp, Status status, Throwable t, Media media) {
+        return log(timestamp, status, null, t, media);
     }
 
     /**
-     * Logs an event with {@link Status} and exception
+     * Logs an event with a timestamp, a {@link Status} and an exception
      * 
+     * @param timestamp
+     *            A {@link Date} when the log event took place
      * @param status
      *            {@link Status}
      * @param t
@@ -495,8 +528,8 @@ public class ExtentTest implements RunResult, Serializable {
      * 
      * @return An {@link ExtentTest} object
      */
-    public ExtentTest log(Status status, Throwable t) {
-        return log(status, t, null);
+    public ExtentTest log(Date timestamp, Status status, Throwable t) {
+        return log(timestamp, status, t, null);
     }
 
     /**

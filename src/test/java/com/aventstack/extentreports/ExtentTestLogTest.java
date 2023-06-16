@@ -22,7 +22,7 @@ public class ExtentTestLogTest {
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void logWithStatusNull() {
-        test().log(null, null, null, null);
+        test().log(null, null, "", null);
     }
 
     @Test

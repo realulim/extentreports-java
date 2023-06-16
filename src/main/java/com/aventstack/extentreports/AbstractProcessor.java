@@ -25,7 +25,7 @@ public abstract class AbstractProcessor extends ReactiveSubject {
 
     @Override
     protected void onTestCreated(Test test) {
-        getReport().getTestList().add(test);
+        getReport().addTest(test);
         super.onTestCreated(test);
     }
 
