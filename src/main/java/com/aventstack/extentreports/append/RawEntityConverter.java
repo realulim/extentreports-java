@@ -79,7 +79,7 @@ public class RawEntityConverter {
         Media m = log.getMedia();
         if (m.getPath() != null) {
             extentTest.log(log.getTimestamp(), log.getStatus(), log.getDetails(), ex,
-                    MediaEntityBuilder.createScreenCaptureFromPath(m.getPath()).build());
+                    MediaEntityBuilder.createScreenCaptureFromPath(m.getPath(), m.getResolvedPath()).build());
         } else if (((ScreenCapture) m).getBase64() != null) {
             extentTest.log(log.getTimestamp(), log.getStatus(), log.getDetails(), ex,
                     MediaEntityBuilder.createScreenCaptureFromBase64String(((ScreenCapture) m).getBase64())
@@ -91,7 +91,7 @@ public class RawEntityConverter {
         if (test.getMedia() != null) {
             for (Media m : test.getMedia()) {
                 if (m.getPath() != null) {
-                    extentTest.addScreenCaptureFromPath(m.getPath());
+                    extentTest.addScreenCaptureFromPath(m.getPath(), m.getResolvedPath(), null);
                 } else if (m instanceof ScreenCapture) {
                     extentTest.addScreenCaptureFromBase64String(((ScreenCapture) m).getBase64());
                 }

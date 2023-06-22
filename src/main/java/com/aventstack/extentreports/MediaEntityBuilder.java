@@ -30,14 +30,18 @@ public class MediaEntityBuilder {
         return media.get();
     }
 
-    public static MediaEntityBuilder createScreenCaptureFromPath(String path, String title) {
+    public static MediaEntityBuilder createScreenCaptureFromPath(String path, String resolvedPath, String title) {
     	Assert.notEmpty(path, "ScreenCapture path must not be null or empty");
-        media.set(ScreenCapture.builder().path(path).title(title).build());
+        media.set(ScreenCapture.builder().path(path).resolvedPath(resolvedPath).title(title).build());
         return getInstance();
     }
 
+    public static MediaEntityBuilder createScreenCaptureFromPath(String path, String resolvedPath) {
+        return createScreenCaptureFromPath(path, resolvedPath, null);
+    }
+
     public static MediaEntityBuilder createScreenCaptureFromPath(String path) {
-        return createScreenCaptureFromPath(path, null);
+        return createScreenCaptureFromPath(path, path, null);
     }
 
     public static MediaEntityBuilder createScreenCaptureFromBase64String(String base64, String title) {
@@ -51,4 +55,5 @@ public class MediaEntityBuilder {
     public static MediaEntityBuilder createScreenCaptureFromBase64String(String base64) {
         return createScreenCaptureFromBase64String(base64, null);
     }
+
 }

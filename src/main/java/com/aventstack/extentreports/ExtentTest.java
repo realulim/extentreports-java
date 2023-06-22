@@ -1103,16 +1103,16 @@ public class ExtentTest implements RunResult, Serializable {
         return model.getStatus();
     }
 
-    public ExtentTest addScreenCaptureFromPath(String path, String title) {
+    public ExtentTest addScreenCaptureFromPath(String path, String resolvedPath, String title) {
         Assert.notEmpty(path, "ScreenCapture path must not be null or empty");
-        Media m = ScreenCapture.builder().path(path).title(title).build();
+        Media m = ScreenCapture.builder().path(path).resolvedPath(resolvedPath).title(title).build();
         model.addMedia(m);
         extent.onMediaAdded(m, model);
         return this;
     }
 
     public ExtentTest addScreenCaptureFromPath(String path) {
-        return addScreenCaptureFromPath(path, null);
+        return addScreenCaptureFromPath(path, path, null);
     }
 
     public ExtentTest addScreenCaptureFromBase64String(String base64, String title) {

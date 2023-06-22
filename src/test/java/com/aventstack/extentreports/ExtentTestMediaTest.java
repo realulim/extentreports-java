@@ -34,7 +34,7 @@ public class ExtentTestMediaTest {
     @Test
     public void addScreenCaptureFromPathTest() {
         ExtentTest test = extent().createTest("Test")
-                .addScreenCaptureFromPath(PATH, TITLE)
+                .addScreenCaptureFromPath(PATH, PATH, TITLE)
                 .pass("Pass");
         Assert.assertEquals(test.getModel().getMedia().size(), 1);
         Assert.assertEquals(test.getModel().getMedia().get(0).getPath(), PATH);
@@ -55,7 +55,7 @@ public class ExtentTestMediaTest {
         ExtentTest test = extent().createTest("Test");
         ExtentTest node = test
                 .createNode("Node")
-                .addScreenCaptureFromPath(PATH, TITLE)
+                .addScreenCaptureFromPath(PATH, PATH, TITLE)
                 .pass("Pass");
         Assert.assertEquals(test.getModel().getMedia().size(), 0);
         Assert.assertEquals(node.getModel().getMedia().size(), 1);
@@ -78,7 +78,7 @@ public class ExtentTestMediaTest {
     @Test
     public void addScreenCaptureFromPathTestLog() {
         ExtentTest test = extent().createTest("Test")
-                .pass("Pass", MediaEntityBuilder.createScreenCaptureFromPath(PATH, TITLE).build());
+                .pass("Pass", MediaEntityBuilder.createScreenCaptureFromPath(PATH, PATH, TITLE).build());
         Assert.assertEquals(test.getModel().getMedia().size(), 0);
         Assert.assertNotNull(test.getModel().getLogs().get(0).getMedia());
         Assert.assertEquals(test.getModel().getLogs().get(0).getMedia().getPath(), PATH);
@@ -99,7 +99,7 @@ public class ExtentTestMediaTest {
         ExtentTest test = extent().createTest("Test");
         ExtentTest node = test
                 .createNode("Node")
-                .pass("Pass", MediaEntityBuilder.createScreenCaptureFromPath(PATH, TITLE).build());
+                .pass("Pass", MediaEntityBuilder.createScreenCaptureFromPath(PATH, PATH, TITLE).build());
         Assert.assertEquals(node.getModel().getMedia().size(), 0);
         Assert.assertNotNull(node.getModel().getLogs().get(0).getMedia());
         Assert.assertEquals(node.getModel().getLogs().get(0).getMedia().getPath(), PATH);
