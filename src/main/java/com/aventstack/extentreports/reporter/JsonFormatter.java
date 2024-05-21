@@ -61,7 +61,7 @@ public class JsonFormatter extends AbstractFileReporter implements ReporterConfi
 
     private void flush(ReportEntity value) {
         GsonExtentTypeAdapterBuilder.Builder builder = GsonExtentTypeAdapterBuilder.builder()
-                .withBddTypeAdapterFactory();
+                .withGsonTypeAdapterFactory();
         for (Map<Type, TypeAdapter<?>> typeAdapterMapping : typeAdapterMappings) {
             for (Type type : typeAdapterMapping.keySet()) {
                 builder.registerTypeAdapter(type, typeAdapterMapping.get(type));
@@ -69,7 +69,7 @@ public class JsonFormatter extends AbstractFileReporter implements ReporterConfi
         }
         Gson gson = builder.build();
         final String filePath = getFileNameAsExt(FILE_NAME, new String[]{".json"});
-        try (FileWriter writer = new FileWriter(new File(filePath))) {
+        try (FileWriter writer = new FileWriter(filePath)) {
             List<Test> list = value.getReport().getTestList();
             gson.toJson(list, writer);
         } catch (IOException e) {
@@ -78,19 +78,19 @@ public class JsonFormatter extends AbstractFileReporter implements ReporterConfi
     }
 
     @Override
-    public void loadJSONConfig(File jsonFile) throws IOException {
+    public void loadJSONConfig(File jsonFile) {
     }
 
     @Override
-    public void loadJSONConfig(String jsonString) throws IOException {
+    public void loadJSONConfig(String jsonString) {
 
     }
 
     @Override
-    public void loadXMLConfig(File xmlFile) throws IOException {
+    public void loadXMLConfig(File xmlFile) {
     }
 
     @Override
-    public void loadXMLConfig(String xmlFile) throws IOException {
+    public void loadXMLConfig(String xmlFile) {
     }
 }

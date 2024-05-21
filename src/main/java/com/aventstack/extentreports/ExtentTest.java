@@ -240,6 +240,9 @@ public class ExtentTest implements RunResult, Serializable {
      * @return {@link ExtentTest}
      */
     public ExtentTest createNode(GherkinKeyword gherkinKeyword, String name, String description) {
+        if (gherkinKeyword == null) {
+            return createNode(name, description);
+        }
         return createNode(gherkinKeyword.getKeyword().getClass(), name, description);
     }
 
@@ -457,6 +460,28 @@ public class ExtentTest implements RunResult, Serializable {
      */
     public ExtentTest log(Date timestamp, Status status, String details) {
         return log(timestamp, status, details, null);
+    }
+
+    /**
+     * Logs an event with {@link Status} and custom {@link Markup} such as:
+     *
+     * <ul>
+     * <li>Code block</li>
+     * <li>Label</li>
+     * <li>Table</li>
+     * </ul>
+     *
+     * @param status
+     *            {@link Status}
+     * @param markup
+     *            {@link Markup}
+     * @param media A {@link Media} object provided by {@link MediaEntityBuilder}
+     *
+     * @return An {@link ExtentTest} object
+     */
+    public ExtentTest log(Status status, Markup markup, Media media) {
+        String details = markup.getMarkup();
+        return log(status, details, null, media);
     }
 
     /**

@@ -8,42 +8,49 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.GherkinKeyword;
 import com.aventstack.extentreports.MediaEntityBuilder;
+import com.aventstack.extentreports.model.ExceptionInfo;
 import com.aventstack.extentreports.model.Log;
 import com.aventstack.extentreports.model.Media;
+import com.aventstack.extentreports.model.NamedAttribute;
 import com.aventstack.extentreports.model.ScreenCapture;
 import com.aventstack.extentreports.model.Test;
 
 public class RawEntityConverter {
+
     private final ExtentReports extent;
 
-    public RawEntityConverter(ExtentReports extent) {
+    public RawEntityConverter(final ExtentReports extent) {
         this.extent = extent;
     }
 
-    public void convertAndApply(File jsonFile) throws IOException {
-        if (!jsonFile.exists())
+    public void convertAndApply(final File jsonFile) throws IOException {
+        if (!jsonFile.exists()) {
             return;
+        }
+
         extent.setReportUsesManualConfiguration(true);
-        List<Test> tests = new JsonDeserializer(jsonFile).deserialize();
-        for (Test test : tests) {
+        final List<Test> tests = new JsonDeserializer(jsonFile).deserialize();
+
+        for (final Test test : tests) {
+            ExtentTest extentTest;
             try {
-                if (test.getBddType() == null) {
-                    createDomain(test, extent.createTest(test.getName(), test.getDescription()));
+                if (test.isBDD()) {
+                    final GherkinKeyword gk = new GherkinKeyword(test.getBddType().getSimpleName());
+                    extentTest = extent.createTest(gk, test.getName(), test.getDescription());
                 } else {
-                    ExtentTest extentTest = extent.createTest(new GherkinKeyword(test.getBddType().getSimpleName()),
-                            test.getName(), test.getDescription());
-                    createDomain(test, extentTest);
+                    extentTest = extent.createTest(test.getName(), test.getDescription());
                 }
+                createDomain(test, extentTest);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void createDomain(Test test, ExtentTest extentTest) throws ClassNotFoundException {
+    public void createDomain(final Test test, final ExtentTest extentTest) throws ClassNotFoundException {
         extentTest.getModel().setStartTime(test.getStartTime());
         extentTest.getModel().setEndTime(test.getEndTime());
-        addMedia(test, extentTest);
+        constructTestMedia(test, extentTest);
 
         // create events
         for (Log log : test.getLogs()) {
@@ -58,19 +65,20 @@ public class RawEntityConverter {
         }
 
         // assign attributes
-        test.getAuthorSet().stream().map(x -> x.getName()).forEach(extentTest::assignAuthor);
-        test.getCategorySet().stream().map(x -> x.getName()).forEach(extentTest::assignCategory);
-        test.getDeviceSet().stream().map(x -> x.getName()).forEach(extentTest::assignDevice);
+        test.getAuthorSet().stream().map(NamedAttribute::getName).forEach(extentTest::assignAuthor);
+        test.getCategorySet().stream().map(NamedAttribute::getName).forEach(extentTest::assignCategory);
+        test.getDeviceSet().stream().map(NamedAttribute::getName).forEach(extentTest::assignDevice);
 
         // handle nodes
         for (Test node : test.getChildren()) {
-            ExtentTest extentNode = null;
-            if (node.getBddType() == null)
+            ExtentTest extentNode;
+            if (!node.isBDD()) {
                 extentNode = extentTest.createNode(node.getName(), node.getDescription());
-            else
-                extentNode = extentTest.createNode(new GherkinKeyword(node.getBddType().getSimpleName()), node.getName(),
-                        node.getDescription());
-            addMedia(node, extentNode);
+            } else {
+                GherkinKeyword gk = new GherkinKeyword(node.getBddType().getSimpleName());
+                extentNode = extentTest.createNode(gk, node.getName(), node.getDescription());
+            }
+            constructTestMedia(node, extentNode);
             createDomain(node, extentNode);
         }
     }
@@ -87,7 +95,7 @@ public class RawEntityConverter {
         }
     }
 
-    private void addMedia(Test test, ExtentTest extentTest) {
+    private void constructTestMedia(final Test test, final ExtentTest extentTest) {
         if (test.getMedia() != null) {
             for (Media m : test.getMedia()) {
                 if (m.getPath() != null) {
@@ -98,4 +106,5 @@ public class RawEntityConverter {
             }
         }
     }
+
 }

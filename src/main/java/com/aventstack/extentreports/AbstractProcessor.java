@@ -14,18 +14,21 @@ import com.aventstack.extentreports.model.Test;
 import com.aventstack.extentreports.model.service.MediaService;
 import com.aventstack.extentreports.model.service.TestService;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public abstract class AbstractProcessor extends ReactiveSubject {
     private String[] mediaResolverPath;
     private boolean usingNaturalConf = true;
+    protected boolean keepLastRetryOnly;
 
     @Override
     protected void onTestCreated(Test test) {
-        getReport().addTest(test);
+        if (keepLastRetryOnly) {
+            getReport().findTest(test.getName())
+                    .ifPresent(x -> getReport().removeTest(x));
+        }
+        getReport().getTestList().add(test);
         super.onTestCreated(test);
     }
 
@@ -39,6 +42,10 @@ public abstract class AbstractProcessor extends ReactiveSubject {
     }
 
     protected void onNodeCreated(Test node) {
+        if (keepLastRetryOnly) {
+            getReport().findTest(node.getName())
+                    .ifPresent(x -> getReport().removeTest(x));
+        }
         super.onTestCreated(node);
     }
 
@@ -83,8 +90,9 @@ public abstract class AbstractProcessor extends ReactiveSubject {
     @Override
     protected void onFlush() {
         getReport().refresh();
-        if (!usingNaturalConf)
+        if (!usingNaturalConf) {
             getReport().applyOverrideConf();
+        }
         super.onFlush();
     }
 

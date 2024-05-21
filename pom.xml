@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.aventstack</groupId>
 	<artifactId>extentreports</artifactId>
-	<version>5.0.12-SNAPSHOT</version>
+	<version>5.1.2-SNAPSHOT</version>
 
 	<name>ExtentReports</name>
 	<url>www.extentreports.com</url>
@@ -75,7 +75,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.16</version>
+				<version>3.1.2</version>
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -107,7 +107,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.5</version>
+				<version>0.8.8</version>
 				<executions>
 					<execution>
 						<goals>
@@ -133,7 +133,10 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>3.0.1</version>
+						<version>3.8.0</version>
+						<configuration>
+							<release>11</release>
+						</configuration>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -146,7 +149,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.0.1</version>
+						<version>3.2.0</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
