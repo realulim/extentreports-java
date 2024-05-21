@@ -1,3 +1,8 @@
+## [5.1.2](https://github.com/realulim/extentreports-java/releases/tag/v5.1.2)
+
+#### New Features
+- Merged Commits from Upstream to support Java 17 (Throwable / Reflection)
+
 ## [5.1.1](https://github.com/extent-framework/extentreports-java/compare/v5.1.0...v5.1.1)
 
 #### Issues Resolved
@@ -21,6 +26,41 @@
 - [#386](/issues/386) Setting to prevent report from repeat displaying a retried test
 - [#379](/issues/379) New ExtentTest method: log(Status status, Markup markup, Media media)
 - [#364](/pull/364) Adds the test description to the card body
+
+## [5.0.18](https://github.com/realulim/extentreports-java/releases/tag/v5.0.18)
+
+#### Issues Resolved
+- Bugfix: resolvedPath of Media is now preserved when read from JSON archive
+
+## [5.0.17](https://github.com/realulim/extentreports-java/releases/tag/v5.0.17)
+
+#### Issues Resolved
+- Bugfix: Timestamps are now preserved when appending tests via JSON domain
+
+## [5.0.16](https://github.com/realulim/extentreports-java/releases/tag/v5.0.16)
+
+#### Issues Resolved
+- remove dependency on commons-lang
+
+## [5.0.15](https://github.com/realulim/extentreports-java/releases/tag/v5.0.15)
+
+#### Issues Resolved
+- fix Jitpack
+
+## [5.0.14](https://github.com/realulim/extentreports-java/releases/tag/v5.0.14)
+
+#### New Features
+- add TypeAdapter Mappings to JsonFormatter, thus enabling Java 11 compatibilty
+
+## [5.0.13](https://github.com/realulim/extentreports-java/releases/tag/v5.0.13)
+
+#### New Features
+- add API to register a custom TypeAdapter
+
+## [5.0.12](https://github.com/realulim/extentreports-java/releases/tag/v5.0.12)
+
+#### New Features
+- Merged Commits from Upstream, updated pom.xml to Java 11
   
 ## [5.0.11](https://github.com/realulim/extentreports-java/releases/tag/v5.0.11)
 
